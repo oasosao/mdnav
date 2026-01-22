@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="{{.Data.DocInfo.Keywords}}">
+<meta name="description" content="{{.Data.DocInfo.Description}}">
+<title>{{ .Data.DocInfo.Name }}</title>
+<base target="_blank">
+<style>
+* {margin: 0;padding: 0;box-sizing: border-box;}
+html{font-size:15px;}
+a{text-decoration: none;}
+body{padding:1rem;}
+main,article{display: flex;flex-direction: column;}
+article section {
+    display: flex;
+}
+</style>
+</head>
+
+<body>
+    <main>
+
+        <header>
+            <h1>{{ .Data.DocInfo.Name }}</h1>
+            <section> 
+                <h3><a href="/{{.Data.CateInfo.Slug}}">{{.Data.CateInfo.Name}}</a></h3>
+                <p><a href="{{.Data.DocInfo.Url}}">{{.Data.DocInfo.Url}}</a></p>
+                <p>{{ .Data.DocInfo.Description }}</p>
+                <p>
+                    <span>{{ timeFormat .Data.DocInfo.CreateTime }}</span>
+                    {{- range $tagFlug,$tagName := .Data.DocInfo.TagsMap -}}
+                    <a href="/tag/{{$tagFlug}}">{{$tagName}}</a>
+                    {{- end -}}
+                </p>
+            </section>
+            
+        </header>
+        <article>
+            {{- md2html .Data.DocInfo.Markdown -}}
+            
+        </article>
+    </main>
+</body>
+
+</html>
