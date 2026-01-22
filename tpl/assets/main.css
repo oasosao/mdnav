@@ -1,0 +1,6 @@
+* {margin: 0;padding: 0;box-sizing: border-box;}
+html{font-size:15px;}
+a{text-decoration: none;}
+body{padding:1rem;}
+main,article{display: flex;flex-direction: column;}
+article section {display: flex;}

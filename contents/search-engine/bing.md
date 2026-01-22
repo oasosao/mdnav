@@ -3,7 +3,7 @@ name: "Bing"
 keywords: ""
 description: "微软推出的搜索引擎，整合了AI技术提供智能搜索体验，每日提供精美壁纸。"
 published: true
-sort: 90
+sort: 3
 url: https://www.bing.com
 category: 搜索引擎
 tags: [搜索, 微软, AI, 壁纸]

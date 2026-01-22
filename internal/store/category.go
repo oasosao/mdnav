@@ -45,6 +45,7 @@ func SortCategories(cates []Category) []Category {
 	return sorter.categories
 }
 
+// GetCategoryByName 根据分类名称获取分类数据
 func GetCategoryByName(name string) (Category, error) {
 
 	cates := make(map[string]Category)
@@ -59,9 +60,9 @@ func GetCategoryByName(name string) (Category, error) {
 	}
 
 	return cate, nil
-
 }
 
+// GetCategoryBySlug 根据分类slug获取分类数据
 func GetCategoryBySlug(slug string) (Category, error) {
 
 	cates := make(map[string]Category)
@@ -91,18 +92,6 @@ func GetCategoriesSlice() ([]Category, error) {
 	categories = SortCategories(categories)
 
 	return categories, nil
-}
-
-// GetConfigTags 获取标签数据
-func GetConfigTags() map[string]string {
-
-	tagsMap := make(map[string]string)
-
-	for k, v := range conf.Config().GetStringMapString("tags") {
-		tagsMap[v] = k
-	}
-
-	return tagsMap
 }
 
 func getConfigCategories() map[string]Category {

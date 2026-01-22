@@ -1,8 +1,9 @@
 package middleware
 
 import (
-	"mdnav/internal/handler/base"
 	"time"
+
+	"mdnav/internal/handler"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -53,10 +54,14 @@ func ZapLoggerWithConfig(logger *zap.Logger) gin.HandlerFunc {
 			logger.Error("服务器错误", fields...)
 		case status >= 400:
 			logger.Warn("客户端错误", fields...)
+		case status >= 300:
+			logger.Info("重定向", fields...)
+		default:
+			logger.Info("请求成功", fields...)
 		}
 
 		if status >= 400 {
-			base.Error(c, logger, status)
+			handler.Error(c, logger, status)
 		}
 	}
 

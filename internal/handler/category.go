@@ -20,9 +20,9 @@ func (h *Handler) Category(ctx *gin.Context) {
 		return
 	}
 
-	bytes, err := tpl.Render("category.html", Index{
-		Data: data,
+	bytes, err := tpl.Render("category.html", HtmlResponse{
 		Site: store.GetSiteInfo(),
+		Data: data,
 	})
 
 	if err != nil {

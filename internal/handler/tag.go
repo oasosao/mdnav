@@ -19,7 +19,7 @@ func (h *Handler) Tag(ctx *gin.Context) {
 		return
 	}
 
-	bytes, err := tpl.Render("tag.html", Index{
+	bytes, err := tpl.Render("tag.html", HtmlResponse{
 		Data: data,
 		Site: store.GetSiteInfo(),
 	})

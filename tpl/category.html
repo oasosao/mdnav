@@ -4,9 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="{{.Site.keywords}}">
-<meta name="description" content="{{.Site.description}}">
-<title>{{ .Site.name }}</title>
+<meta name="keywords" content="{{.Data.CateInfo.Keywords}}">
+<meta name="description" content="{{.Data.CateInfo.Description}}">
+<title>{{ .Data.CateInfo.Name }}</title>
 <style>
 * {margin: 0;padding: 0;box-sizing: border-box;}
 html{font-size:15px;}
@@ -20,30 +20,34 @@ article section {
 </head>
 
 <body>
+<pre>
+{{.Site}}
+</pre>
 <main>
-    {{- range .Data }}
-    <article>
-        <header>
-            <h2> <a href="/{{.CateInfo.Slug}}">{{ .CateInfo.Name }}</a></h2>
-            <p>{{ .CateInfo.Description }}</p>
-        </header>
-        <section>
-        {{- $cateName := .CateInfo.Name -}}
-        {{- range .Documents}}
-            <div class="site">
-                <h3>{{.Name}} <small>{{$cateName}}</small></h3>
-                <p><a href="/article{{.Slug}}">{{.Url}}</a></p>
-                <p>{{.Description}}</p>
-                <p>
-                    {{- range $tagSlug,$tabName := .TagsMap }}
-                    <a href="/tag/{{$tagSlug}}">{{$tabName}}</a>
-                    {{- end }}
-                </p>
-            </div>
-        {{- end }}
-        </section>
-    </article>
-    {{- end}}
+
+    <header>
+        <h2> <a href="/{{.Data.CateInfo.Slug}}">{{ .Data.CateInfo.Name }}</a></h2>
+        <p>{{ .Data.CateInfo.Description }}</p>
+    </header>
+    <section>
+    {{- $cateName := .Data.CateInfo.Name -}}
+    {{- range .Data.Documents}}
+        <div class="site">
+            <h3>{{.Name}} <small>{{$cateName}}</small></h3>
+            <p><a href="/article{{.Slug}}">{{.Url}}</a></p>
+            <p>{{.Description}}</p>
+            <p>
+                {{- range $tagSlug,$tabName := .TagsMap }}
+                <a href="/tag/{{$tagSlug}}">{{$tabName}}</a>
+                {{- end }}
+            </p>
+        </div>
+        <article>
+            {{ md2html .Markdown }}
+        </article>
+    {{- end }}
+    </section>
+
 </main>
 </body>
 

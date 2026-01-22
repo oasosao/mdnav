@@ -1,28 +1,33 @@
-package base
+package handler
 
 import (
 	"net/http"
 
+	"mdnav/internal/core"
 	"mdnav/internal/pkg/logger"
 	"mdnav/internal/utils/tpl"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Response struct {
+type Handler struct {
+	Ctx *core.Context
+}
+
+type JsonResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 	Data    any    `json:"data"`
 }
 
+type HtmlResponse struct {
+	Site any
+	Data any
+}
+
 type HttpError struct {
 	Code int
 	Msg  string
-}
-
-var ErrorCodeMsg map[int]string = map[int]string{
-	404: "找不到访问页面",
-	500: "服务器错误",
 }
 
 func Error(c *gin.Context, logger logger.Logger, status int, errMsg ...string) {
@@ -35,7 +40,10 @@ func Error(c *gin.Context, logger logger.Logger, status int, errMsg ...string) {
 		eMsg = http.StatusText(status)
 	}
 
-	httpError := HttpError{
+	httpError := struct {
+		Code int
+		Msg  string
+	}{
 		Code: status,
 		Msg:  eMsg,
 	}

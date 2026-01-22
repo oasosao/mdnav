@@ -29,9 +29,9 @@ func (h *Handler) Article(ctx *gin.Context) {
 		ctx.AbortWithStatus(404)
 	} else {
 
-		bytes, err := tpl.Render("article.html", Index{
-			Data: data,
+		bytes, err := tpl.Render("article.html", HtmlResponse{
 			Site: store.GetSiteInfo(),
+			Data: data,
 		})
 
 		if err != nil {

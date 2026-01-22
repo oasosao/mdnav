@@ -8,11 +8,14 @@ site:
   description: "site nav"
   logo_path: ""
   favicon: ""
+  image:
+    banner: aaaa
+    banner1: bbb
 
 template:
   dir: "tpl"
   default: "index.html"
-  static_dir: "assets"
+  static_dir: "tpl/assets"
 
 categories:
   search-engine:

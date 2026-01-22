@@ -32,7 +32,7 @@ func IpRateLimiter() gin.HandlerFunc {
 		clientIP := c.ClientIP()
 		bucket := getBucket(clientIP)
 		// 尝试取一个令牌，如果不足则返回429
-		if bucket.TakeAvailable(5) == 0 {
+		if bucket.TakeAvailable(1) == 0 {
 			c.AbortWithError(http.StatusTooManyRequests, errors.New("请求过于频繁，请稍后再试"))
 			return
 		}

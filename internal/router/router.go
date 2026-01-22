@@ -23,7 +23,6 @@ func Run(ctx *core.Context) {
 	router := gin.New()
 	router.Use(middleware.ZapLoggerWithConfig(ctx.Logger))
 	router.Use(middleware.Options())
-	router.Use(middleware.IpRateLimiter())
 	router.Use(gin.Recovery())
 
 	h := &handler.Handler{
@@ -33,10 +32,11 @@ func Run(ctx *core.Context) {
 	router.StaticFile("/favicon.ico", conf.Config().GetString("site.favicon"))
 	router.Static("/static", conf.Config().GetString("template.static_dir"))
 
-	router.GET("/", h.Index)
-	router.GET("/:slug", h.Category)
-	router.GET("/tag/:slug", h.Tag)
-	router.GET("/article/*slug", h.Article)
+	r := router.Group("").Use(middleware.IpRateLimiter())
+	r.GET("/", h.Index)
+	r.GET("/:slug", h.Category)
+	r.GET("/tag/:slug", h.Tag)
+	r.GET("/article/*slug", h.Article)
 
 	serverPort := conf.Config().GetString("server.port")
 	srv := &http.Server{

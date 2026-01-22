@@ -7,28 +7,19 @@
 <meta name="keywords" content="{{.Site.keywords}}">
 <meta name="description" content="{{.Site.description}}">
 <title>{{ .Site.name }}</title>
-<style>
-* {margin: 0;padding: 0;box-sizing: border-box;}
-html{font-size:15px;}
-a{text-decoration: none;}
-body{padding:1rem;}
-main,article{display: flex;flex-direction: column;}
-article section {
-    display: flex;
-}
-</style>
+<link rel="stylesheet" href="/static/main.css">
 </head>
 
 <body>
 <main>
     {{- range .Data }}
+    {{- $cateName := .CateInfo.Name }}
     <article>
         <header>
-            <h2> <a href="/{{.CateInfo.Slug}}">{{ .CateInfo.Name }}</a></h2>
+            <h2> <a href="/{{.CateInfo.Slug}}">{{ $cateName}}</a></h2>
             <p>{{ .CateInfo.Description }}</p>
         </header>
         <section>
-        {{- $cateName := .CateInfo.Name -}}
         {{- range .Documents}}
             <div class="site">
                 <h3>{{.Name}} <small>{{$cateName}}</small></h3>

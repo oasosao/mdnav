@@ -105,26 +105,11 @@ func LoadAllDocuments(ctx *core.Context) error {
 }
 
 // GetCategoryDocuments 根据分类获取文档 如果分类名(cateName)为空返回所有分类和文档
-func GetCategoryDocuments(ctx *core.Context, cateSlug string, sortBy SortBy, sortOrder SortOrder) ([]CategoryDocuments, error) {
+func GetCategoriesDocumnets(ctx *core.Context, sortBy SortBy, sortOrder SortOrder) ([]CategoryDocuments, error) {
 
 	allDocument := getAllResultTypeDocuments(CateType)
+
 	var categoryDocuments []CategoryDocuments
-
-	if cateSlug != "" {
-
-		cate, err := GetCategoryBySlug(cateSlug)
-		if err != nil {
-			return nil, err
-		}
-
-		docs, ok := allDocument[cate.Name]
-		if ok {
-			docs = SortDocuments(docs, sortBy, sortOrder)
-			categoryDocuments = append(categoryDocuments, CategoryDocuments{CateInfo: cate, Documents: docs})
-		}
-
-		return categoryDocuments, nil
-	}
 
 	cates, err := GetCategoriesSlice()
 	if err != nil {
@@ -142,12 +127,29 @@ func GetCategoryDocuments(ctx *core.Context, cateSlug string, sortBy SortBy, sor
 	return categoryDocuments, nil
 }
 
+func GetCategoryDocuments(ctx *core.Context, cateSlug string, sortBy SortBy, sortOrder SortOrder) (CategoryDocuments, error) {
+
+	allDocument := getAllResultTypeDocuments(CateType)
+
+	cate, err := GetCategoryBySlug(cateSlug)
+	if err != nil {
+		return CategoryDocuments{}, err
+	}
+
+	docs, ok := allDocument[cate.Name]
+	if ok {
+		docs = SortDocuments(docs, sortBy, sortOrder)
+	}
+
+	return CategoryDocuments{CateInfo: cate, Documents: docs}, nil
+}
+
 // GetTagDocuments 根据标签获取文档
 func GetTagDocuments(ctx *core.Context, tagSlug string, sortBy SortBy, sortOrder SortOrder) ([]CategoryDocuments, error) {
 
 	var resultData []CategoryDocuments
 
-	data, err := GetCategoryDocuments(ctx, "", sortBy, sortOrder)
+	data, err := GetCategoriesDocumnets(ctx, sortBy, sortOrder)
 	if err != nil {
 		return nil, err
 	}

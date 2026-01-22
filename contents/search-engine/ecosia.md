@@ -3,7 +3,7 @@ name: "Ecosia"
 keywords: ""
 description: "环保搜索引擎，将80%的广告收入用于植树造林，致力于环境保护。"
 published: true
-sort: 90
+sort: 5
 url: https://www.ecosia.org
 category: 搜索引擎
 tags: [搜索, 环保, 植树, 公益]

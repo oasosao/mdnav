@@ -3,7 +3,7 @@ name: "百度"
 keywords: ""
 description: "中国最大的搜索引擎，提供中文搜索和各类本地化服务，包括贴吧、知道、百科等生态产品。"
 published: true
-sort: 90
+sort: 2
 url: https://www.baidu.com
 category: 搜索引擎
 tags: [搜索, 中文, 本地化, 生态]
