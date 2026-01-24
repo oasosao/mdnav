@@ -1,14 +1,14 @@
 package conf
 
 import (
-	"mdnav/internal/core"
-
 	"github.com/spf13/viper"
 )
 
-var config *viper.Viper
+type Config = *viper.Viper
 
-func InitConfig(ctx *core.Context, configPath, configName string) {
+var config Config
+
+func InitConfig(configPath, configName string) error {
 
 	config = viper.New()
 
@@ -19,13 +19,15 @@ func InitConfig(ctx *core.Context, configPath, configName string) {
 
 	// 读取配置文件
 	if err := config.ReadInConfig(); err != nil {
-		ctx.Logger.Fatal("Error reading config file" + err.Error())
+		return err
 	}
 
 	// 监听配置文件变化
 	config.WatchConfig()
+
+	return nil
 }
 
-func Config() *viper.Viper {
+func Get() Config {
 	return config
 }

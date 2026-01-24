@@ -8,34 +8,81 @@
 <meta name="description" content="{{.Site.description}}">
 <title>{{ .Site.name }}</title>
 <link rel="stylesheet" href="/static/main.css">
+<base target="_blank">
 </head>
 
 <body>
-<main>
-    {{- range .Data }}
-    {{- $cateName := .CateInfo.Name }}
-    <article>
+    <aside>
         <header>
-            <h2> <a href="/{{.CateInfo.Slug}}">{{ $cateName}}</a></h2>
-            <p>{{ .CateInfo.Description }}</p>
+            <h1> OAEOE</h1>
+            <p>智能网址导航 · 发现互联网之美</p>
         </header>
-        <section>
-        {{- range .Documents}}
-            <div class="site">
-                <h3>{{.Name}} <small>{{$cateName}}</small></h3>
-                <p><a href="/article{{.Slug}}">{{.Url}}</a></p>
-                <p>{{.Description}}</p>
-                <p>
-                    {{- range $tagSlug,$tabName := .TagsMap }}
-                    <a href="/tag/{{$tagSlug}}">{{$tabName}}</a>
-                    {{- end }}
-                </p>
-            </div>
-        {{- end }}
-        </section>
-    </article>
-    {{- end}}
-</main>
+
+        <article>
+            <section class="active">
+                <h3>搜索引擎</h3>
+                <div class="category-count">6</div>
+            </section>
+            <section>
+                <h3>社交媒体</h3>
+                <div class="category-count">8</div>
+            </section>
+            <section>
+                <h3>开发资源</h3>
+                <div class="category-count">9</div>
+            </section>
+            <section>
+                <h3>设计资源</h3>
+                <div class="category-count">7</div>
+            </section>
+            <section>
+                <h3>效率工具</h3>
+                <div class="category-count">7</div>
+            </section>
+            <section>
+                <h3>AI工具</h3>
+                <div class="category-count">6</div>
+            </section>
+        </article>
+
+        <footer>
+            <p>&copy; 2026 OAEOE · 探索精彩网站</p>
+        </footer>
+
+    </aside>
+    <main>
+        {{- range .Data }}
+        {{- $cateName := .Category.Name }}
+        <article>
+            <header>
+                <h2><a href="/{{.Category.Slug}}">{{ $cateName}}</a></h2>
+                <p>{{ .Category.Description }}</p>
+            </header>
+            <section>
+            {{- range .DocumentList}}
+                <div class="site">
+                    <div class="site-header">
+                        <h3>{{.Name}}</h3>
+                        <h4>{{$cateName}}</h4>
+                    </div>
+                    <div class="link"><a href="/article/{{.Slug}}">{{.Url}}</a></div>
+                    <p>{{.Description}}</p>
+                    <div class="site-footer">
+                        <div class="tags">
+                            {{- range .Tags }}
+                            <a href="/tag/{{.}}">{{.}}</a>
+                            {{- end }}
+                        </div>
+                        <div class="site-link">
+                            <a class="btn" href="{{.Url}}">访问网站</a>
+                        </div>
+                    </div>
+                </div>
+            {{- end }}
+            </section>
+        </article>
+        {{- end}}
+    </main>
 </body>
 
 </html>

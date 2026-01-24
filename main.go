@@ -1,35 +1,45 @@
 package main
 
 import (
-	"log/slog"
 	"os"
 
 	"mdnav/internal/conf"
 	"mdnav/internal/core"
-	"mdnav/internal/pkg/logger"
+	"mdnav/internal/pkg/wacher"
+	"mdnav/internal/pkg/zap"
 	"mdnav/internal/router"
-	"mdnav/internal/store"
+	"mdnav/internal/service"
 )
 
 func main() {
 
 	// 初始化Logger
-	logger := logger.NewLogger()
+	logger := zap.NewLogger()
 	defer logger.Sync()
 
-	ctx := &core.Context{
-		Logger: logger,
-	}
+	logger.Info("应用启动")
 
-	conf.InitConfig(ctx, ".", "config")
-
-	if err := store.LoadAllDocuments(ctx); err != nil {
-		slog.Error(err.Error())
+	if err := conf.InitConfig(".", "config"); err != nil {
+		logger.Error(err.Error())
 		os.Exit(1)
 	}
 
-	go store.WatcherFile(ctx, func() {
-		store.LoadAllDocuments(ctx)
+	ctx := &core.Context{
+		Log:  logger,
+		Conf: conf.Get(),
+	}
+
+	if err := service.LoadAllData(ctx); err != nil {
+		logger.Error("加载文档失败 " + err.Error())
+		os.Exit(1)
+	}
+
+	go wacher.WatcherFile(ctx, func() {
+		logger.Info("文件变化，重新加载文档")
+		if err := service.LoadAllData(ctx); err != nil {
+			logger.Error("加载文档失败 " + err.Error())
+			os.Exit(1)
+		}
 	})
 
 	router.Run(ctx)

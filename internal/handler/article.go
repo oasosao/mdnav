@@ -1,48 +1,48 @@
 package handler
 
 import (
-	"net/http"
-	"path"
-
-	"mdnav/internal/conf"
-	"mdnav/internal/store"
+	"mdnav/internal/service"
 	"mdnav/internal/utils/tpl"
+	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) Article(ctx *gin.Context) {
 
-	params := ctx.Param("slug")
+	params := strings.TrimPrefix(ctx.Param("slug"), "/")
 
-	ext := path.Ext(params)
-	if ext != "" {
-		dirPath := conf.Config().GetString("server.content_dir")
-		fsPath := path.Join(dirPath, params)
-		ctx.File(fsPath)
+	data := service.GetDocument(params)
+	if data == nil {
+		ctx.AbortWithStatus(404)
 		return
 	}
 
-	data, err := store.GetDocument(params)
-	if err != nil {
-		h.Ctx.Logger.Error(err.Error())
-		ctx.AbortWithStatus(404)
-	} else {
+	// result := Response{
+	// 	Status:  0,
+	// 	Message: "success",
+	// 	Result: Result{
+	// 		Site: service.GetSiteInfo(h.Ctx),
+	// 		Data: data,
+	// 	},
+	// }
 
-		bytes, err := tpl.Render("article.html", HtmlResponse{
-			Site: store.GetSiteInfo(),
-			Data: data,
-		})
+	// ctx.JSON(200, result)
 
-		if err != nil {
-			h.Ctx.Logger.Error(err.Error())
-			ctx.AbortWithError(http.StatusInternalServerError, err)
-			return
-		}
-
-		ctx.Writer.WriteHeader(http.StatusOK)
-		ctx.Writer.Write(bytes)
-
+	result := Result{
+		Site: service.GetSiteInfo(h.Ctx),
+		Data: data,
 	}
+
+	bytes, err := tpl.Render(h.TplDir, "article.html", result)
+	if err != nil {
+		h.Ctx.Log.Error(err.Error())
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.Writer.WriteHeader(http.StatusOK)
+	ctx.Writer.Write(bytes)
 
 }

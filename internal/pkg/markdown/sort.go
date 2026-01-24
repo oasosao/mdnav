@@ -1,4 +1,4 @@
-package store
+package markdown
 
 import (
 	"sort"
@@ -23,7 +23,7 @@ const (
 
 // DocumentSorter 文档排序器
 type DocumentSorter struct {
-	documents []Document
+	documents []Markdown
 	sortBy    SortBy
 	order     SortOrder
 }
@@ -60,7 +60,7 @@ func (s *DocumentSorter) Less(i, j int) bool {
 }
 
 // SortDocuments 对文档进行排序
-func SortDocuments(docs []Document, sortBy SortBy, order SortOrder) []Document {
+func SortDocuments(docs []Markdown, sortBy SortBy, order SortOrder) []Markdown {
 
 	sorter := &DocumentSorter{
 		sortBy:    sortBy,

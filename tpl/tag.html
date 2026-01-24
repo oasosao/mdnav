@@ -24,19 +24,19 @@ article section {
     {{- range .Data }}
     <article>
         <header>
-            <h2> <a href="/{{.CateInfo.Slug}}">{{ .CateInfo.Name }}</a></h2>
-            <p>{{ .CateInfo.Description }}</p>
+            <h2> <a href="/{{.Category.Slug}}">{{ .Category.Name }}</a></h2>
+            <p>{{ .Category.Description }}</p>
         </header>
         <section>
-        {{- $cateName := .CateInfo.Name -}}
-        {{- range .Documents}}
+        {{- $cateName := .Category.Name -}}
+        {{- range .DocumentList}}
             <div class="site">
                 <h3>{{.Name}} <small>{{$cateName}}</small></h3>
                 <p><a href="/article{{.Slug}}">{{.Url}}</a></p>
                 <p>{{.Description}}</p>
                 <p>
-                    {{- range $tagSlug,$tabName := .TagsMap }}
-                    <a href="/tag/{{$tagSlug}}">{{$tabName}}</a>
+                    {{- range .Tags }}
+                    <a href="/tag/{{.}}">{{.}}</a>
                     {{- end }}
                 </p>
             </div>

@@ -1,9 +1,11 @@
 package core
 
 import (
-	"mdnav/internal/pkg/logger"
+	"mdnav/internal/conf"
+	"mdnav/internal/pkg/zap"
 )
 
 type Context struct {
-	Logger logger.Logger
+	Log  zap.Logger
+	Conf conf.Config
 }

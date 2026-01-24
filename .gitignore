@@ -10,6 +10,7 @@ dist-ssr
 mdnav
 mdnav.exe
 *.exe
+html
 
 
 # Editor directories and files

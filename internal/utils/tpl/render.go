@@ -3,34 +3,36 @@ package tpl
 import (
 	"bytes"
 	"html/template"
+	"maps"
 	"path"
 	"time"
 
-	"mdnav/internal/conf"
-	"mdnav/internal/store"
+	"mdnav/internal/pkg/markdown"
 	"mdnav/internal/utils"
 )
 
-var funcMap = template.FuncMap{
+var funcMaps = template.FuncMap{
 	"md2html": func(md string) template.HTML {
-		return store.ConvertMarkdownToHTML([]byte(md))
+		return markdown.ConvertMarkdownToHTML([]byte(md))
 	},
 	"timeFormat": func(t time.Time) string {
 		return t.Format("2006-01-02 15:04:05")
 	},
 }
 
-func Render(tplName string, data any) ([]byte, error) {
-
-	tplDir := conf.Config().GetString("template.dir")
+func Render(tplDir, tplName string, data any, funcMap ...template.FuncMap) ([]byte, error) {
 
 	tplFile := path.Join(tplDir, tplName)
 
 	if !utils.PathExist(tplFile) {
-		tplFile = path.Join(tplDir, conf.Config().GetString("template.default"))
+		tplFile = path.Join(tplDir, "default.html")
 	}
 
-	tpl := template.New(tplName).Funcs(funcMap)
+	if len(funcMap) > 0 {
+		maps.Copy(funcMaps, funcMap[0])
+	}
+
+	tpl := template.New(tplName).Funcs(funcMaps)
 
 	tpl, err := tpl.ParseFiles(tplFile)
 	if err != nil {

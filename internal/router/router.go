@@ -8,7 +8,6 @@ import (
 	"syscall"
 	"time"
 
-	"mdnav/internal/conf"
 	"mdnav/internal/core"
 	"mdnav/internal/handler"
 	"mdnav/internal/middleware"
@@ -21,24 +20,26 @@ func Run(ctx *core.Context) {
 	gin.SetMode(gin.ReleaseMode)
 
 	router := gin.New()
-	router.Use(middleware.ZapLoggerWithConfig(ctx.Logger))
-	router.Use(middleware.Options())
 	router.Use(gin.Recovery())
+	router.Use(middleware.RequestError(ctx))
+	router.Use(middleware.Logger(ctx))
+	router.Use(middleware.Options(ctx))
 
 	h := &handler.Handler{
-		Ctx: ctx,
+		Ctx:    ctx,
+		TplDir: ctx.Conf.GetString("template.dir"),
 	}
 
-	router.StaticFile("/favicon.ico", conf.Config().GetString("site.favicon"))
-	router.Static("/static", conf.Config().GetString("template.static_dir"))
+	// router.StaticFile("/favicon.ico", ctx.Conf.GetString("site.favicon"))
+	router.Static("/static", ctx.Conf.GetString("template.static_dir"))
 
-	r := router.Group("").Use(middleware.IpRateLimiter())
+	r := router.Group("").Use(middleware.IpRateLimiter(ctx))
 	r.GET("/", h.Index)
 	r.GET("/:slug", h.Category)
-	r.GET("/tag/:slug", h.Tag)
+	r.GET("/tag/:tagName", h.Tag)
 	r.GET("/article/*slug", h.Article)
 
-	serverPort := conf.Config().GetString("server.port")
+	serverPort := ctx.Conf.GetString("server.port")
 	srv := &http.Server{
 		Addr:           serverPort,
 		Handler:        router,
@@ -48,9 +49,9 @@ func Run(ctx *core.Context) {
 	}
 
 	go func() {
-		ctx.Logger.Info("Server started at" + serverPort)
+		ctx.Log.Info("Server started at" + serverPort)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			ctx.Logger.Fatal("listen: " + err.Error() + "\n")
+			ctx.Log.Fatal("listen: " + err.Error() + "\n")
 		}
 	}()
 
@@ -58,15 +59,16 @@ func Run(ctx *core.Context) {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
-	ctx.Logger.Info("Shutdown Server ...")
+	ctx.Log.Info("Shutdown Server ...")
 
 	ctxx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if err := srv.Shutdown(ctxx); err != nil {
-		ctx.Logger.Info("Server Shutdown: " + err.Error())
+		ctx.Log.Error("Server Shutdown: " + err.Error())
+		return
 	}
 
-	ctx.Logger.Info("Server exiting")
+	ctx.Log.Info("Server exiting")
 
 }

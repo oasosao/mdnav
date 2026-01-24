@@ -3,7 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"mdnav/internal/store"
+	"mdnav/internal/models/doc"
+	"mdnav/internal/service"
 	"mdnav/internal/utils/tpl"
 
 	"github.com/gin-gonic/gin"
@@ -11,27 +12,36 @@ import (
 
 func (h *Handler) Tag(ctx *gin.Context) {
 
-	params := ctx.Param("slug")
-	data, err := store.GetTagDocuments(h.Ctx, params, store.SortByUpdateTime, store.Descending)
-	if err != nil {
-		h.Ctx.Logger.Error(err.Error())
+	params := ctx.Param("tagName")
+	data := service.GetTagDocuments(params, doc.SortByUpdateTime, doc.Descending)
+	if data == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	bytes, err := tpl.Render("tag.html", HtmlResponse{
-		Data: data,
-		Site: store.GetSiteInfo(),
-	})
+	// result := Response{
+	// 	Status:  0,
+	// 	Message: "success",
+	// 	Result: Result{
+	// 		Site: service.GetSiteInfo(h.Ctx),
+	// 		Data: data,
+	// 	},
+	// }
 
+	// ctx.JSON(200, result)
+
+	result := Result{
+		Site: service.GetSiteInfo(h.Ctx),
+		Data: data,
+	}
+
+	bytes, err := tpl.Render(h.TplDir, "tag.html", result)
 	if err != nil {
-		h.Ctx.Logger.Error(err.Error())
+		h.Ctx.Log.Error(err.Error())
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
 	ctx.Writer.WriteHeader(http.StatusOK)
 	ctx.Writer.Write(bytes)
-
-	// ctx.JSON(200, base.Response{Status: 0, Data: data, Message: "success"})
 }

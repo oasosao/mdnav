@@ -3,25 +3,18 @@ package middleware
 import (
 	"time"
 
-	"mdnav/internal/handler"
+	"mdnav/internal/core"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
 // 增强版日志中间件
-func ZapLoggerWithConfig(logger *zap.Logger) gin.HandlerFunc {
+func Logger(ctx *core.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
 		path := c.Request.URL.Path
 		query := c.Request.URL.RawQuery
-
-		// 将logger存入context，供后续处理函数使用
-		c.Set("zapLogger", logger)
-
-		// 请求处理前可以记录请求体（注意性能）
-		// body, _ := io.ReadAll(c.Request.Body)
-		// c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
 
 		c.Next() // 处理请求
 
@@ -49,19 +42,16 @@ func ZapLoggerWithConfig(logger *zap.Logger) gin.HandlerFunc {
 
 		// 根据状态码选择日志级别
 		status := c.Writer.Status()
+
 		switch {
 		case status >= 500:
-			logger.Error("服务器错误", fields...)
+			ctx.Log.Error("服务器错误", fields...)
 		case status >= 400:
-			logger.Warn("客户端错误", fields...)
+			ctx.Log.Warn("客户端错误", fields...)
 		case status >= 300:
-			logger.Info("重定向", fields...)
+			ctx.Log.Info("重定向", fields...)
 		default:
-			logger.Info("请求成功", fields...)
-		}
-
-		if status >= 400 {
-			handler.Error(c, logger, status)
+			// ctx.Log.Info("请求成功", fields...)
 		}
 	}
 

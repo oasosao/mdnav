@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"mdnav/internal/core"
+
 	"github.com/gin-gonic/gin"
 	"github.com/juju/ratelimit"
 )
@@ -27,7 +29,7 @@ func getBucket(ip string) *ratelimit.Bucket {
 	return bucket
 }
 
-func IpRateLimiter() gin.HandlerFunc {
+func IpRateLimiter(ctx *core.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		clientIP := c.ClientIP()
 		bucket := getBucket(clientIP)

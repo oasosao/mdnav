@@ -1,12 +1,12 @@
-package store
+package doc
 
 // PageResult 分页结果
 type PageResult struct {
-	Total      int        `json:"total"`       // 总文档数
-	Page       int        `json:"page"`        // 当前页码
-	PageSize   int        `json:"page_size"`   // 每页大小
-	TotalPages int        `json:"total_pages"` // 总页数
-	Documents  []Document `json:"list"`        // 当前页文档
+	Total      int        `json:"total"`          // 总文档数
+	Page       int        `json:"page"`           // 当前页码
+	PageSize   int        `json:"page_size"`      // 每页大小
+	TotalPages int        `json:"total_pages"`    // 总页数
+	Documents  []Document `json:"documents_list"` // 文档列表数据
 }
 
 // Paginate 分页函数

@@ -1,4 +1,4 @@
-package logger
+package zap
 
 import (
 	"os"
@@ -9,10 +9,11 @@ import (
 )
 
 type Logger = *zap.Logger
-type Field = zap.Field
+type Field = zapcore.Field
 
 // 创建生产环境Logger
 func NewLogger() Logger {
+
 	// 日志轮转配置
 	lumberjackLogger := &lumberjack.Logger{
 		Filename:   "logs/app.log",
@@ -44,4 +45,12 @@ func NewLogger() Logger {
 
 	// 创建Logger
 	return zap.New(core, zap.AddCaller(), zap.AddCallerSkip(0))
+}
+
+func Error(err error) Field {
+	return zap.Error(err)
+}
+
+func String(key, val string) Field {
+	return zap.String(key, val)
 }

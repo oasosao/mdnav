@@ -1,65 +1,23 @@
 package handler
 
 import (
-	"net/http"
-
 	"mdnav/internal/core"
-	"mdnav/internal/pkg/logger"
-	"mdnav/internal/utils/tpl"
-
-	"github.com/gin-gonic/gin"
 )
 
+// Handler HTTP请求处理器结构体，包含应用上下文
 type Handler struct {
-	Ctx *core.Context
+	Ctx    *core.Context // 应用上下文，包含日志记录器等核心组件
+	TplDir string
 }
 
-type JsonResponse struct {
-	Status  int    `json:"status"`
-	Message string `json:"message"`
-	Data    any    `json:"data"`
+// JsonResponse JSON响应结构体
+type Response struct {
+	Status  int    `json:"status"`  // 响应状态码，0表示成功，非0表示失败
+	Message string `json:"message"` // 响应消息，描述请求结果
+	Result  any    `json:"result"`  // 响应数据，根据请求返回对应的数据
 }
 
-type HtmlResponse struct {
-	Site any
-	Data any
-}
-
-type HttpError struct {
-	Code int
-	Msg  string
-}
-
-func Error(c *gin.Context, logger logger.Logger, status int, errMsg ...string) {
-
-	eMsg := ""
-
-	if len(errMsg) > 0 {
-		eMsg = errMsg[0]
-	} else {
-		eMsg = http.StatusText(status)
-	}
-
-	httpError := struct {
-		Code int
-		Msg  string
-	}{
-		Code: status,
-		Msg:  eMsg,
-	}
-
-	bytes, err := tpl.Render("error.html", httpError)
-	if err != nil {
-		logger.Error(err.Error())
-		c.Writer.WriteHeader(500)
-		return
-	}
-
-	c.Writer.WriteHeader(status)
-
-	_, err = c.Writer.Write(bytes)
-	if err != nil {
-		logger.Error(err.Error())
-	}
-
+type Result struct {
+	Site any `json:"site"` // 站点信息，包含站点名称、关键词等配置
+	Data any `json:"data"` // 页面数据，根据请求返回对应的数据
 }
