@@ -83,7 +83,7 @@ func AddWatcherDirRecursive(ctx *core.Context, watcher *fsnotify.Watcher, dir st
 		return err
 	}
 
-	ctx.Log.Debug("添加监听目录", zap.String("dir", dir))
+	ctx.Log.Info("添加监听目录", zap.String("dir", dir))
 
 	// 递归遍历子目录
 	return filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
@@ -97,7 +97,7 @@ func AddWatcherDirRecursive(ctx *core.Context, watcher *fsnotify.Watcher, dir st
 				return nil // 继续处理其他目录
 			}
 
-			ctx.Log.Debug("添加监听子目录", zap.String("dir", path))
+			ctx.Log.Info("添加监听子目录", zap.String("dir", path))
 		}
 		return nil
 	})

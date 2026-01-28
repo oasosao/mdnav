@@ -1,91 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="keywords" content="{{.Site.keywords}}">
 <meta name="description" content="{{.Site.description}}">
-<title>{{ .Site.name }}</title>
+<title>{{ .Site.name }} - {{ .Site.summary }}</title>
 <link rel="stylesheet" href="/static/main.css">
-<base target="_blank">
 </head>
-
 <body>
-<button class="mobile-menu-toggle" id="mobileMenuToggle">
-&lt;&lt;&lt;
-</button>
-    <aside>
+<header class="header">
+    <section class="top">
+        <h1>{{.Site.name}}</h1>
+        <p>{{.Site.summary}}</p>
+    </section>
+    <nav class="nav">
+        {{- range .Categories -}}
+        {{- if .Published}}
+        <h3 data-id="{{.Slug}}">{{ .Name }}<small>{{.DocumentCount}}</small></h3>
+        {{- end }}
+        {{- end }}
+    </nav><!-- <footer>
+        {{- with .Site.copyright}}
+        <p>&copy; {{$.Site.name}} - {{- . -}}</p>
+        {{- end }}
+    </footer> -->
+</header>
+<main>
+    {{- range .Data }}
+    {{- $cateName := .Category.Name }}
+    {{- if .Category.Published }}
+    <article id="{{.Category.Slug}}">
         <header>
-            <h1> OAEOE</h1>
-            <p>智能网址导航 · 发现互联网之美</p>
+            <h2>{{ $cateName}}</h2><!-- <a href="/{{.Category.Slug}}">{{ $cateName}}</a></h2> -->
+            <p>{{ .Category.Description }}</p>
         </header>
-
-        <article>
-            <section class="active">
-                <h3>搜索引擎</h3>
-                <div class="category-count">6</div>
-            </section>
-            <section>
-                <h3>社交媒体</h3>
-                <div class="category-count">8</div>
-            </section>
-            <section>
-                <h3>开发资源</h3>
-                <div class="category-count">9</div>
-            </section>
-            <section>
-                <h3>设计资源</h3>
-                <div class="category-count">7</div>
-            </section>
-            <section>
-                <h3>效率工具</h3>
-                <div class="category-count">7</div>
-            </section>
-            <section>
-                <h3>AI工具</h3>
-                <div class="category-count">6</div>
-            </section>
-        </article>
-
-        <footer>
-            <p>&copy; 2026 OAEOE · 探索精彩网站</p>
-        </footer>
-
-    </aside>
-    <main>
-        {{- range .Data }}
-        {{- $cateName := .Category.Name }}
-        <article>
-            <header>
-                <h2><a href="/{{.Category.Slug}}">{{ $cateName}}</a></h2>
-                <p>{{ .Category.Description }}</p>
-            </header>
-            <section>
-            {{- range .DocumentList}}
-                <div class="site">
-                    <div class="site-header">
-                        <h3>{{.Name}}</h3>
-                        <h4>{{$cateName}}</h4>
-                    </div>
-                    <div class="link"><a href="/article/{{.Slug}}">{{.Url}}</a></div>
-                    <p>{{.Description}}</p>
-                    <div class="site-footer">
-                        <div class="tags">
-                            {{- range .Tags }}
-                            <a href="/tag/{{.}}">{{.}}</a>
-                            {{- end }}
-                        </div>
-                        <div class="site-link">
-                            <a class="btn" href="{{.Url}}">访问网站</a>
-                        </div>
-                    </div>
+        <section>
+            {{- range .DocumentList }}
+            {{- if .Published }}
+            <div class="site">
+                <div class="site-header">
+                    <h3>{{.Name}}</h3>
+                    <h4>{{$cateName}}</h4>
                 </div>
+                <!-- <a class="link" href="/article/{{.Slug}}">{{.Url}}</a> -->
+                <a class="link" href="{{.Url}}" target="_blank">{{.Url}}</a>
+                <p>{{.Description}}</p>
+                <div class="site-footer">
+                    <a class="btn" href="{{.Url}}" target="_blank">访问网站</a>
+                    <nav class="tags">
+                        {{- range .Tags }}
+                        <span>{{.}}</span> <!-- <a href="/tag/{{.}}">{{.}}</a> -->
+                        {{- end }}
+                    </nav>
+                </div>
+            </div>
+            {{- end -}}
             {{- end }}
-            </section>
-        </article>
-        {{- end}}
-    </main>
-</body>
+        </section>
+    </article>
+    {{- end -}}
+    {{- end}}
+    <footer>
+        {{- with .Site.copyright}}
+        <p>&copy; {{$.Site.name}} - {{- . -}}</p>
+        {{- end }}
+    </footer>
+</main>
+<div class="float-controls">
+    <button class="mobile-menu">
+        <i class="mobile-icon"></i>
+    </button>
+    <button class="theme-btn">
+        <i class="theme-icon"></i>
+    </button>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const navLinks = document.querySelectorAll('.header .nav h3');
+    const mainElement = document.querySelector('main');
+    const mobileMenuElement = document.querySelector('.mobile-menu');
+    const mobileMenuIconElement = document.querySelector('.mobile-menu i');
+    const asideElement = document.querySelector('.header');
+   
+    const themeBtn = document.querySelector(".theme-btn");
+    navLinks.length > 0 ? navLinks[0].classList.add("active") : null;
 
+    themeBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        const isDark = document.body.classList.contains("light-theme");
+        if (isDark) {
+            document.body.classList.remove("light-theme")
+        } else {
+            document.body.classList.add("light-theme")
+        }
+
+        localStorage.setItem("navTheme", isDark ? "dark" : "light");
+    });
+
+    // 加载保存的主题
+    const savedTheme = localStorage.getItem("navTheme");
+    if (savedTheme === "light") {
+        document.body.classList.add("light-theme");
+    }
+
+    mobileMenuElement.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (asideElement.classList.contains("aside--100")) {
+            asideElement.classList.remove("aside--100")
+            asideElement.classList.add("aside-0")
+            mobileMenuIconElement.classList.remove("mobile-icon")
+            mobileMenuIconElement.classList.add("mobile-close-icon")
+        } else {
+            asideElement.classList.remove("aside-0")
+            asideElement.classList.add("aside--100")
+            mobileMenuIconElement.classList.remove("mobile-close-icon")
+            mobileMenuIconElement.classList.add("mobile-icon")
+        }
+    })
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            navLinks.forEach(t => {
+                t.classList.remove("active")
+            });
+
+            const targetId = this.getAttribute('data-id');
+            const targetSection = document.getElementById(targetId);
+            if (targetSection && mainElement) {
+                const targetPosition = targetSection.offsetTop - mainElement.offsetTop;
+                mainElement.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+            this.classList.add("active")
+        });
+    });
+
+    function mobileChange() {
+        if (window.innerWidth > 1024) {
+            if (asideElement.classList.contains("aside--100")) {
+                asideElement.classList.remove("aside--100")
+                asideElement.classList.add("aside-0")
+                mobileMenuIconElement.classList.remove("mobile-icon")
+                mobileMenuIconElement.classList.add("mobile-close-icon")
+            }
+        } else {
+            asideElement.classList.remove("aside-0")
+            asideElement.classList.add("aside--100")
+            mobileMenuIconElement.classList.remove("mobile-close-icon")
+            mobileMenuIconElement.classList.add("mobile-icon")
+        }
+    }
+
+    mobileChange();
+
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            mobileChange();
+        }, 30);
+    });
+});
+</script>
+</body>
 </html>

@@ -8,7 +8,7 @@ type Config = *viper.Viper
 
 var config Config
 
-func InitConfig(configPath, configName string) error {
+func InitConfig(configPath, configName string, isDebug string) error {
 
 	config = viper.New()
 
@@ -23,7 +23,9 @@ func InitConfig(configPath, configName string) error {
 	}
 
 	// 监听配置文件变化
-	config.WatchConfig()
+	if isDebug == "true" {
+		config.WatchConfig()
+	}
 
 	return nil
 }

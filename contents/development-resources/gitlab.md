@@ -6,7 +6,7 @@ published: true
 sort: 90
 url: https://gitlab.com
 category: 开发资源
-tags: [代码, DevOps, CI/CD, 管理]
+tags: [代码, DevOps, CI-CD, 管理]
 create_time: 2025-12-03T10:00:00+08:00
 ---
 

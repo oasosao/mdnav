@@ -2,6 +2,7 @@ package zap
 
 import (
 	"os"
+	"time"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -53,4 +54,12 @@ func Error(err error) Field {
 
 func String(key, val string) Field {
 	return zap.String(key, val)
+}
+
+func Int(key string, val int) Field {
+	return zap.Int(key, val)
+}
+
+func Duration(key string, val time.Duration) Field {
+	return zap.Duration(key, val)
 }

@@ -5,6 +5,9 @@ import (
 	"mdnav/internal/models"
 	"mdnav/internal/models/cate"
 	"mdnav/internal/models/doc"
+	"sort"
+
+	"go.uber.org/zap"
 )
 
 type CategoryDocuments struct {
@@ -30,17 +33,22 @@ func LoadAllData(ctx *core.Context) (err error) {
 
 	categories, err = cate.New(ctx)
 	if err != nil {
+		ctx.Log.Error("分类数据加载失败", zap.Error(err))
 		return err
 	}
+
+	ctx.Log.Info("分类数据加载完成")
 
 	documents, err = doc.New(ctx)
 	if err != nil {
+		ctx.Log.Error("文档数据加载失败", zap.Error(err))
 		return err
 	}
+	ctx.Log.Info("文档数据加载完成")
 
 	cateDocsSlugMap = models.GetCateDocsSlugMap(categories, documents)
 
-	ctx.Log.Info("所有数据加载完成")
+	ctx.Log.Info("分类文档映射数据加载完成")
 
 	return nil
 }
@@ -159,7 +167,37 @@ func GetTagDocuments(tagName string, sortBy doc.SortBy, order doc.SortOrder) []C
 	return tagDocuments
 }
 
-// 获取网站信息
+// GetSiteInfo 获取网站信息
 func GetSiteInfo(ctx *core.Context) map[string]any {
 	return ctx.Conf.GetStringMap("site")
+}
+
+// GetAllCategories 获取所有分类数据
+func GetAllCategories() []cate.Category {
+
+	var cates []cate.Category
+
+	for cateSlug, docsSlug := range cateDocsSlugMap.GetCateDocsSlugMap() {
+		c := *categories.GetCategoriesBySlug(cateSlug)
+		c.DocumentCount = len(docsSlug)
+		cates = append(cates, c)
+	}
+
+	return cate.SortCategories(cates)
+}
+
+func GetCategoryBySlug(slug string) cate.Category {
+	cates := categories.GetCategoriesBySlug(slug)
+	return *cates
+}
+
+// GetAllTags 获取所有tag数据
+func GetAllTags() []string {
+
+	var tags []string
+	for k := range documents.GetTags() {
+		tags = append(tags, k)
+	}
+	sort.Strings(tags)
+	return tags
 }

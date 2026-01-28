@@ -3,7 +3,6 @@ package markdown
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"html/template"
 	"io"
 	"os"
@@ -71,9 +70,9 @@ func Parser(filePath string) (markdownDoc Markdown, err error) {
 		}
 	}
 
-	if !markdownDoc.Published {
-		return Markdown{}, errors.New("文档未发布")
-	}
+	// if !markdownDoc.Published {
+	// 	return Markdown{}, errors.New("文档未发布")
+	// }
 
 	markdownDoc.Markdown = markdownContent
 	markdownDoc.UpdateTime = info.ModTime()

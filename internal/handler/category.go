@@ -31,8 +31,10 @@ func (h *Handler) Category(ctx *gin.Context) {
 	// ctx.JSON(200, result)
 
 	result := Result{
-		Site: service.GetSiteInfo(h.Ctx),
-		Data: data,
+		Site:       service.GetSiteInfo(h.Ctx),
+		Data:       data,
+		Categories: service.GetAllCategories(),
+		Category:   service.GetCategoryBySlug(params),
 	}
 
 	bytes, err := tpl.Render(h.TplDir, "category.html", result)

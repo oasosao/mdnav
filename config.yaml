@@ -1,17 +1,16 @@
 server:
-  port: ":8081"
+  port: "0.0.0.0:8081"
   content_dir: "./contents/"
   resset: ""
 
 site:
-  name: "OAEOE NAV"
-  keywords: "nav, site nav"
-  description: "site nav"
+  name: "OAEOE"
+  keywords: "导航网站, 导航网址, 网址导航, 网站导航"
+  description: "智能网址导航，发现互联网之美，这是你进入各大网站的门户。"
+  summary: "智能网址导航 · 发现互联网之美"
   logo_path: ""
   favicon: ""
-  image:
-    banner: aaaa
-    banner1: bbb
+  copyright: "探索精彩网站"
 
 template:
   dir: "tpl"

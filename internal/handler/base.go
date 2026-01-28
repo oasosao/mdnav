@@ -18,6 +18,10 @@ type Response struct {
 }
 
 type Result struct {
-	Site any `json:"site"` // 站点信息，包含站点名称、关键词等配置
-	Data any `json:"data"` // 页面数据，根据请求返回对应的数据
+	Site       any    `json:"site"`       // 站点信息，包含站点名称、关键词等配置
+	Data       any    `json:"data"`       // 页面数据，根据请求返回对应的数据
+	Categories any    `json:"categories"` // 页面所有分类数据
+	Category   any    `json:"category"`
+	Tags       any    `json:"tags"` // 所有tags
+	Tag        string `json:"tag"`  //
 }

@@ -31,8 +31,11 @@ func (h *Handler) Tag(ctx *gin.Context) {
 	// ctx.JSON(200, result)
 
 	result := Result{
-		Site: service.GetSiteInfo(h.Ctx),
-		Data: data,
+		Site:       service.GetSiteInfo(h.Ctx),
+		Data:       data,
+		Tags:       service.GetAllTags(),
+		Tag:        params,
+		Categories: service.GetAllCategories(),
 	}
 
 	bytes, err := tpl.Render(h.TplDir, "tag.html", result)

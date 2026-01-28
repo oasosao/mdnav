@@ -31,8 +31,10 @@ func (h *Handler) Article(ctx *gin.Context) {
 	// ctx.JSON(200, result)
 
 	result := Result{
-		Site: service.GetSiteInfo(h.Ctx),
-		Data: data,
+		Site:       service.GetSiteInfo(h.Ctx),
+		Data:       data,
+		Categories: service.GetAllCategories(),
+		Tags:       service.GetAllTags(),
 	}
 
 	bytes, err := tpl.Render(h.TplDir, "article.html", result)

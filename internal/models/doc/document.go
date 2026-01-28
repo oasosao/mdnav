@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -117,15 +118,13 @@ func getAllDocuments(ctx *core.Context) (map[string]Document, map[string][]strin
 
 	dirPath := ctx.Conf.GetString("server.content_dir")
 
-	ctx.Log.Info("开始加载文档 path=" + dirPath)
-
 	info, err := os.Stat(dirPath)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	if !info.IsDir() {
-		return nil, nil, errors.New("is not dir")
+		return nil, nil, errors.New("content_dir 不是目录")
 	}
 
 	walkDir := strings.TrimRight(info.Name(), "/") + "/"
@@ -157,7 +156,7 @@ func getAllDocuments(ctx *core.Context) (map[string]Document, map[string][]strin
 
 		cateSlug := strings.TrimPrefix(path.Dir(pathName), walkDir)
 		slug := strings.TrimSuffix(path.Join(cateSlug, d.Name()), ".md")
-
+		sort.Strings(mdCont.Tags)
 		document := Document{
 			Name:        mdCont.Name,
 			Keywords:    mdCont.Keywords,

@@ -11,7 +11,7 @@ import (
 
 func (h *Handler) Index(ctx *gin.Context) {
 
-	data := service.GetCategoriesDocuments(doc.SortByUpdateTime, doc.Descending)
+	data := service.GetCategoriesDocuments(doc.SortBySort, doc.Descending)
 	if data == nil {
 		ctx.AbortWithStatus(404)
 		return
@@ -29,8 +29,10 @@ func (h *Handler) Index(ctx *gin.Context) {
 	// ctx.JSON(200, result)
 
 	result := Result{
-		Site: service.GetSiteInfo(h.Ctx),
-		Data: data,
+		Site:       service.GetSiteInfo(h.Ctx),
+		Data:       data,
+		Categories: service.GetAllCategories(),
+		// Tags:       service.GetAllTags(),
 	}
 
 	bytes, err := tpl.Render(h.TplDir, "index.html", result)

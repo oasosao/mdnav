@@ -16,7 +16,7 @@ func RequestError(ctx *core.Context) gin.HandlerFunc {
 		c.Next()
 
 		status := c.Writer.Status()
-		if status >= 300 {
+		if status >= 400 {
 
 			eMsg := http.StatusText(status)
 

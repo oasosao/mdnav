@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"mdnav/internal/core"
 	"mdnav/internal/pkg/markdown"
@@ -15,16 +16,19 @@ import (
 
 // Category 分类
 type Category struct {
-	Name        string `json:"name"`
-	Keywords    string `json:"keywords"`
-	Description string `json:"description"`
-	Slug        string `json:"slug"`
-	Icon        string `json:"icon"`
-	Markdown    string `json:"markdown"`
-	Image       string `json:"image"`
-	Sort        int    `json:"sort"`
-	Custom      any    `json:"custom"`
-	Published   bool   `json:"published"`
+	Name          string    `json:"name"`
+	Keywords      string    `json:"keywords"`
+	Description   string    `json:"description"`
+	Slug          string    `json:"slug"`
+	Icon          string    `json:"icon"`
+	Markdown      string    `json:"markdown"`
+	Image         string    `json:"image"`
+	Sort          int       `json:"sort"`
+	Custom        any       `json:"custom"`
+	Published     bool      `json:"published"`
+	DocumentCount int       `json:"document_count"`
+	CreateTIme    time.Time `json:"create_time"`
+	UpdateTIme    time.Time `json:"update_time"`
 }
 
 type CategoriesMap struct {
@@ -87,8 +91,6 @@ func getAllCategories(ctx *core.Context) (map[string]Category, error) {
 
 	dirPath := ctx.Conf.GetString("server.content_dir")
 
-	ctx.Log.Info("开始加载文档 path=" + dirPath)
-
 	info, err := os.Stat(dirPath)
 	if err != nil {
 		return nil, err
@@ -135,6 +137,8 @@ func getAllCategories(ctx *core.Context) (map[string]Category, error) {
 				Sort:        mdCont.Sort,
 				Custom:      mdCont.Custom,
 				Published:   mdCont.Published,
+				CreateTIme:  mdCont.CreateTime,
+				UpdateTIme:  mdCont.UpdateTime,
 			}
 		}
 
