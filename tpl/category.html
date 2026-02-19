@@ -1,3 +1,4 @@
+{{- $cateName := .Category.Name -}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="keywords" content="{{.Category.Keywords}}">
 <meta name="description" content="{{.Category.Description}}">
-<title>{{.Category.Name}}-{{ .Site.name }}</title>
+<title>{{$cateName}}-{{ .Site.name }}</title>
 <link rel="stylesheet" href="/static/main.css">
 </head>
 <body>
@@ -17,16 +18,39 @@
     <nav class="nav">
         <a href="/" class="nav-item">首页</a>
         {{- range .Categories -}}
-        {{- if eq .Published false }}
+        {{- if eq .Published true }}
         <a href="/{{.Slug}}" class="nav-item {{if eq .Slug $.Category.Slug}} active {{end}}">{{.Name}}</a>
         {{- end }}
         {{- end -}}
     </nav>
 </header>
 <main>
-    <article class="article">
-    {{md2html .Category.Markdown}}
-    </article>
+    <section>
+        <header>
+            <h2>{{ $cateName}}</h2><!-- <h2><a href="/{{.Category.Slug}}">{{ $cateName}}</a></h2> -->
+            <p>{{ .Category.Description }}</p>
+        </header>
+        <article class="article">
+            {{- range .Data.DocumentList }} {{- if .Published }}
+            <div class="site">
+                <div class="site-header">
+                    <h3>{{.Name}}</h3>
+                    <h4>{{$cateName}}</h4>
+                </div>
+                <a class="link" href="/article/{{.Slug}}">{{.Url}}</a><!-- <a class="link" href="{{.Url}}" target="_blank">{{.Url}}</a> -->
+                <p>{{.Description}}</p>
+                <div class="site-footer">
+                    <a class="btn" href="{{.Url}}" target="_blank">访问网站</a>
+                    <nav class="tags">
+                        {{- range .Tags }}
+                        <a href="/tag/{{.}}">{{.}}</a><!-- <span>{{.}}</span> -->
+                        {{- end }}
+                    </nav>
+                </div>
+            </div>
+            {{- end -}} {{- end }}
+        </article>
+    </section>
     <footer>
         {{- with .Site.copyright}}
         <p>&copy; {{$.Site.name}} - {{- . -}}</p>

@@ -201,3 +201,8 @@ func GetAllTags() []string {
 	sort.Strings(tags)
 	return tags
 }
+
+func GetTopCategories() []cate.Category {
+
+	return nil
+}

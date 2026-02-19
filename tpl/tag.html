@@ -24,15 +24,22 @@
     </nav>
 </header>
 <main>
+    <nav class="nav-tags">
+        {{- with .Tags -}}
+        {{- range .}}
+        <a href="/tag/{{.}}" {{- if eq $.Tag .}} class="active" {{- end -}}>{{.}}</a>
+        {{- end }}
+        {{- end -}}
+    </nav>
     {{- range .Data }}
     {{- $cateName := .Category.Name }}
     {{- if .Category.Published }}
-    <article id="{{.Category.Slug}}">
+    <section id="{{.Category.Slug}}">
         <header>
             <h2>{{ $cateName}}</h2><!-- <a href="/{{.Category.Slug}}">{{ $cateName}}</a></h2> -->
             <p>{{ .Category.Description }}</p>
         </header>
-        <section>
+        <article>
             {{- range .DocumentList }}
             {{- if .Published }}
             <div class="site">
@@ -53,17 +60,11 @@
             </div>
             {{- end -}}
             {{- end }}
-        </section>
-    </article>
+        </article>
+    </section>
     {{- end -}}
     {{- end}}
-    <nav class="nav-tags">
-        {{- with .Tags -}}
-        {{- range .}}
-        <a href="/tag/{{.}}" {{- if eq $.Tag .}} class="active" {{- end -}}>{{.}}</a>
-        {{- end }}
-        {{- end -}}
-    </nav>
+
     <footer>
         {{- with .Site.copyright}}
         <p>&copy; {{$.Site.name}} - {{- . -}}</p>

@@ -26,6 +26,7 @@ type Category struct {
 	Sort          int       `json:"sort"`
 	Custom        any       `json:"custom"`
 	Published     bool      `json:"published"`
+	IsShow        bool      `json:"is_show"`
 	DocumentCount int       `json:"document_count"`
 	CreateTIme    time.Time `json:"create_time"`
 	UpdateTIme    time.Time `json:"update_time"`
@@ -139,6 +140,7 @@ func getAllCategories(ctx *core.Context) (map[string]Category, error) {
 				Published:   mdCont.Published,
 				CreateTIme:  mdCont.CreateTime,
 				UpdateTIme:  mdCont.UpdateTime,
+				IsShow:      mdCont.IsShow,
 			}
 		}
 

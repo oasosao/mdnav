@@ -1,7 +1,6 @@
 package zap
 
 import (
-	"os"
 	"time"
 
 	"go.uber.org/zap"
@@ -39,7 +38,7 @@ func NewLogger() Logger {
 		zapcore.NewJSONEncoder(encoderConfig),
 		zapcore.NewMultiWriteSyncer(
 			zapcore.AddSync(lumberjackLogger),
-			zapcore.AddSync(os.Stdout), // 开发时也输出到控制台
+			// zapcore.AddSync(os.Stdout), // 开发时也输出到控制台
 		),
 		atomicLevel,
 	)

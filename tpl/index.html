@@ -1,171 +1,188 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="{{.Site.keywords}}">
-<meta name="description" content="{{.Site.description}}">
-<title>{{ .Site.name }} - {{ .Site.summary }}</title>
-<link rel="stylesheet" href="/static/main.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="initial-scale=1.0,maximum-scale=1,minimum-scale=1.0,user-scalable=no,width=device-width,viewport-fit=cover" />
+    <meta name="keywords" content="{{.Site.keywords}}" />
+    <meta name="description" content="{{.Site.description}}" />
+    <meta name="renderer" content="webkit">
+    <title>{{ .Site.name }} - {{ .Site.summary }}</title>
+    <link rel="stylesheet" href="/static/main.css">
 </head>
+
 <body>
-<header class="header">
-    <section class="top">
-        <h1>{{.Site.name}}</h1>
-        <p>{{.Site.summary}}</p>
-    </section>
-    <nav class="nav">
-        {{- range .Categories -}}
-        {{- if .Published}}
-        <h3 data-id="{{.Slug}}">{{ .Name }}<small>{{.DocumentCount}}</small></h3>
-        {{- end }}
-        {{- end }}
-    </nav><!-- <footer>
+    <header class="header">
+        <section class="top">
+            <h1>{{.Site.name}}</h1>
+            <p>{{.Site.summary}}</p>
+        </section>
+        <nav class="nav">
+            {{- range .Categories -}} {{- if .Published}}
+            <h3 data-id="{{.Slug}}">
+                {{ .Name }}<small>{{.DocumentCount}}</small>
+            </h3>
+            {{- end }} {{- end }}
+        </nav><!-- <footer>
         {{- with .Site.copyright}}
         <p>&copy; {{$.Site.name}} - {{- . -}}</p>
         {{- end }}
     </footer> -->
-</header>
-<main>
-    {{- range .Data }}
-    {{- $cateName := .Category.Name }}
-    {{- if .Category.Published }}
-    <article id="{{.Category.Slug}}">
-        <header>
-            <h2>{{ $cateName}}</h2><!-- <a href="/{{.Category.Slug}}">{{ $cateName}}</a></h2> -->
-            <p>{{ .Category.Description }}</p>
-        </header>
-        <section>
-            {{- range .DocumentList }}
-            {{- if .Published }}
-            <div class="site">
-                <div class="site-header">
-                    <h3>{{.Name}}</h3>
-                    <h4>{{$cateName}}</h4>
+    </header>
+    <main>
+        {{- range .Data }} {{- $cateName := .Category.Name }} {{- if
+        .Category.Published }}
+        <section id="{{.Category.Slug}}">
+            <header>
+                <!-- <h2>{{ $cateName}}</h2> -->
+                <h2><a href="/{{.Category.Slug}}">{{ $cateName}}</a></h2>
+                <p>{{ .Category.Description }}</p>
+            </header>
+            <article>
+                {{- range .DocumentList }} {{- if .Published }}
+                <div class="site">
+                    <div class="site-header">
+                        <h3>{{.Name}}</h3>
+                        <h4>{{$cateName}}</h4>
+                    </div>
+                    <a class="link" href="/article/{{.Slug}}">{{.Url}}</a>
+                    <!-- <a class="link" href="{{.Url}}" target="_blank">{{.Url}}</a> -->
+                    <p>{{.Description}}</p>
+                    <div class="site-footer">
+                        <a class="btn" href="{{.Url}}" target="_blank">访问网站</a>
+                        <nav class="tags">
+                            {{- range .Tags }}
+                            <!-- <span>{{.}}</span> -->
+                            <a href="/tag/{{.}}">{{.}}</a>
+                            {{- end }}
+                        </nav>
+                    </div>
                 </div>
-                <!-- <a class="link" href="/article/{{.Slug}}">{{.Url}}</a> -->
-                <a class="link" href="{{.Url}}" target="_blank">{{.Url}}</a>
-                <p>{{.Description}}</p>
-                <div class="site-footer">
-                    <a class="btn" href="{{.Url}}" target="_blank">访问网站</a>
-                    <nav class="tags">
-                        {{- range .Tags }}
-                        <span>{{.}}</span> <!-- <a href="/tag/{{.}}">{{.}}</a> -->
-                        {{- end }}
-                    </nav>
-                </div>
-            </div>
-            {{- end -}}
-            {{- end }}
+                {{- end -}} {{- end }}
+            </article>
         </section>
-    </article>
-    {{- end -}}
-    {{- end}}
-    <footer>
-        {{- with .Site.copyright}}
-        <p>&copy; {{$.Site.name}} - {{- . -}}</p>
-        {{- end }}
-    </footer>
-</main>
-<div class="float-controls">
-    <button class="mobile-menu">
-        <i class="mobile-icon"></i>
-    </button>
-    <button class="theme-btn">
-        <i class="theme-icon"></i>
-    </button>
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const navLinks = document.querySelectorAll('.header .nav h3');
-    const mainElement = document.querySelector('main');
-    const mobileMenuElement = document.querySelector('.mobile-menu');
-    const mobileMenuIconElement = document.querySelector('.mobile-menu i');
-    const asideElement = document.querySelector('.header');
-   
-    const themeBtn = document.querySelector(".theme-btn");
-    navLinks.length > 0 ? navLinks[0].classList.add("active") : null;
+        {{- end -}} {{- end}}
+        <footer>
+            {{- with .Site.copyright}}
+            <p>&copy; {{$.Site.name}} - {{- . -}}</p>
+            {{- end }}
+        </footer>
+    </main>
+    <div class="float-controls">
+        <button class="mobile-menu">
+            <i class="mobile-icon"></i>
+        </button>
+        <button class="theme-btn">
+            <i class="theme-icon"></i>
+        </button>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const navLinks = document.querySelectorAll(".header .nav h3");
+            const mainElement = document.querySelector("main");
+            const mobileMenuElement = document.querySelector(".mobile-menu");
+            const mobileMenuIconElement = document.querySelector(".mobile-menu i");
+            const asideElement = document.querySelector(".header");
 
-    themeBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        const isDark = document.body.classList.contains("light-theme");
-        if (isDark) {
-            document.body.classList.remove("light-theme")
-        } else {
-            document.body.classList.add("light-theme")
-        }
+            const themeBtn = document.querySelector(".theme-btn");
+            navLinks.length > 0 ? navLinks[0].classList.add("active") : null;
 
-        localStorage.setItem("navTheme", isDark ? "dark" : "light");
-    });
-
-    // 加载保存的主题
-    const savedTheme = localStorage.getItem("navTheme");
-    if (savedTheme === "light") {
-        document.body.classList.add("light-theme");
-    }
-
-    mobileMenuElement.addEventListener('click', function (e) {
-        e.preventDefault();
-        if (asideElement.classList.contains("aside--100")) {
-            asideElement.classList.remove("aside--100")
-            asideElement.classList.add("aside-0")
-            mobileMenuIconElement.classList.remove("mobile-icon")
-            mobileMenuIconElement.classList.add("mobile-close-icon")
-        } else {
-            asideElement.classList.remove("aside-0")
-            asideElement.classList.add("aside--100")
-            mobileMenuIconElement.classList.remove("mobile-close-icon")
-            mobileMenuIconElement.classList.add("mobile-icon")
-        }
-    })
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            navLinks.forEach(t => {
-                t.classList.remove("active")
+            const articles = mainElement.querySelectorAll("section");
+            mainElement.addEventListener("scroll", function (e) {
+                // 更新导航链接激活状态
+                let mainScrollTop = this.scrollTop + 20;
+                articles.forEach((t) => {
+                    if (
+                        mainScrollTop >= t.offsetTop &&
+                        mainScrollTop < t.offsetTop + t.offsetHeight
+                    ) {
+                        navLinks.forEach((link) => {
+                            link.classList.remove("active");
+                            if (link.getAttribute("data-id") === t.getAttribute("id")) {
+                                link.classList.add("active");
+                            }
+                        });
+                    }
+                });
             });
 
-            const targetId = this.getAttribute('data-id');
-            const targetSection = document.getElementById(targetId);
-            if (targetSection && mainElement) {
-                const targetPosition = targetSection.offsetTop - mainElement.offsetTop;
-                mainElement.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
+            themeBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                const isDark = document.body.classList.contains("light-theme");
+                if (isDark) {
+                    document.body.classList.remove("light-theme");
+                } else {
+                    document.body.classList.add("light-theme");
+                }
+                localStorage.setItem("navTheme", isDark ? "dark" : "light");
+            });
+
+            // 加载保存的主题
+            const savedTheme = localStorage.getItem("navTheme");
+            if (savedTheme === "light") {
+                document.body.classList.add("light-theme");
+            }
+
+            mobileMenuElement.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (asideElement.classList.contains("aside--100")) {
+                    asideElement.classList.remove("aside--100");
+                    asideElement.classList.add("aside-0");
+                    mobileMenuIconElement.classList.remove("mobile-icon");
+                    mobileMenuIconElement.classList.add("mobile-close-icon");
+                } else {
+                    asideElement.classList.remove("aside-0");
+                    asideElement.classList.add("aside--100");
+                    mobileMenuIconElement.classList.remove("mobile-close-icon");
+                    mobileMenuIconElement.classList.add("mobile-icon");
+                }
+            });
+            navLinks.forEach((link) => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    navLinks.forEach((t) => {
+                        t.classList.remove("active");
+                    });
+
+                    const targetId = this.getAttribute("data-id");
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection && mainElement) {
+                        let targetPosition = targetSection.offsetTop - mainElement.offsetTop;
+                        mainElement.scrollTo({
+                            top: targetPosition,
+                            behavior: "smooth",
+                        });
+                    }
+                    this.classList.add("active");
                 });
+            });
+            function mobileChange() {
+                if (window.innerWidth > 1024) {
+                    if (asideElement.classList.contains("aside--100")) {
+                        asideElement.classList.remove("aside--100");
+                        asideElement.classList.add("aside-0");
+                        mobileMenuIconElement.classList.remove("mobile-icon");
+                        mobileMenuIconElement.classList.add("mobile-close-icon");
+                    }
+                } else {
+                    asideElement.classList.remove("aside-0");
+                    asideElement.classList.add("aside--100");
+                    mobileMenuIconElement.classList.remove("mobile-close-icon");
+                    mobileMenuIconElement.classList.add("mobile-icon");
+                }
             }
-            this.classList.add("active")
-        });
-    });
-
-    function mobileChange() {
-        if (window.innerWidth > 1024) {
-            if (asideElement.classList.contains("aside--100")) {
-                asideElement.classList.remove("aside--100")
-                asideElement.classList.add("aside-0")
-                mobileMenuIconElement.classList.remove("mobile-icon")
-                mobileMenuIconElement.classList.add("mobile-close-icon")
-            }
-        } else {
-            asideElement.classList.remove("aside-0")
-            asideElement.classList.add("aside--100")
-            mobileMenuIconElement.classList.remove("mobile-close-icon")
-            mobileMenuIconElement.classList.add("mobile-icon")
-        }
-    }
-
-    mobileChange();
-
-    let resizeTimer;
-    window.addEventListener("resize", () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
             mobileChange();
-        }, 30);
-    });
-});
-</script>
+            let resizeTimer;
+            window.addEventListener("resize", () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    mobileChange();
+                }, 30);
+            });
+        });
+    </script>
 </body>
+
 </html>

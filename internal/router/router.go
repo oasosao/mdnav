@@ -33,7 +33,6 @@ func Run(ctx *core.Context) {
 		TplDir: ctx.Conf.GetString("template.dir"),
 	}
 
-	// router.StaticFile("/favicon.ico", ctx.Conf.GetString("site.favicon"))
 	router.Static("/static", ctx.Conf.GetString("template.static_dir"))
 
 	authorized := router.Group("/system", gin.BasicAuth(gin.Accounts{
@@ -53,9 +52,9 @@ func Run(ctx *core.Context) {
 	r := router.Group("").Use(middleware.IpRateLimiter(ctx))
 	r.GET("/", h.Index)
 
-	// r.GET("/:slug", h.Category)
+	r.GET("/:slug", h.Category)
 	r.GET("/tag/:tagName", h.Tag)
-	// r.GET("/article/*slug", h.Article)
+	r.GET("/article/*slug", h.Article)
 
 	serverPort := ctx.Conf.GetString("server.port")
 	srv := &http.Server{
@@ -88,5 +87,4 @@ func Run(ctx *core.Context) {
 	}
 
 	ctx.Log.Info("服务退出")
-
 }

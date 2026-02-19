@@ -23,6 +23,7 @@ type Markdown struct {
 	Keywords    string    `yaml:"keywords"`    // 关键词，用于SEO和搜索
 	Description string    `yaml:"description"` // 文档摘要，简短描述文档内容
 	Published   bool      `yaml:"published"`   // 是否发布，false表示草稿
+	IsShow      bool      `yaml:"is_show"`     // 是否显示 false表示不显示
 	Sort        int       `yaml:"sort"`        // 排序权重，数字越大优先级越高
 	Icon        string    `yaml:"icon"`        // 文档图标URL
 	Url         string    `yaml:"url"`         // 文档链接URL
