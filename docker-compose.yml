@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  mdnav:
+    build: .
+    container_name: mdnav
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./contents:/app/contents
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai

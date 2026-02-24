@@ -198,6 +198,53 @@ description: 开发者常用的工具和资源
 2. 将编译后的可执行文件和配置文件、内容目录、模板目录部署到服务器
 3. 启动服务：`./mdnav`
 
+## Docker 部署
+
+### 使用 Dockerfile 构建和运行
+
+1. 构建镜像
+
+```bash
+docker build -t mdnav .
+```
+
+2. 运行容器
+
+```bash
+docker run -d \
+  --name mdnav \
+  -p 8081:8081 \
+  -v ./contents:/app/contents \
+  --restart unless-stopped \
+  mdnav
+```
+
+### 使用 docker-compose 部署
+
+1. 启动服务
+
+```bash
+docker-compose up -d
+```
+
+2. 查看服务状态
+
+```bash
+docker-compose ps
+```
+
+3. 停止服务
+
+```bash
+docker-compose down
+```
+
+### 注意事项
+
+- 使用 Docker 部署时，内容目录会通过卷挂载到容器中，这样可以方便地更新导航链接而不需要重建容器
+- 如果修改了配置文件或模板文件，需要重建镜像并重启容器
+- 默认端口为 8081，可以在 docker-compose.yml 文件中修改映射端口
+
 ## 许可证
 
 本项目采用 MIT 许可证，详见 LICENSE 文件。
